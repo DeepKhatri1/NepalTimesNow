@@ -1,0 +1,374 @@
+<?php get_header(); ?>
+
+
+    <section class="sc-banner px-3">
+        <div class="container">
+
+        <?php if (in_category('भिडियो')) { ?>
+          <div class="img-cover">
+            <?php echo get_field('embed_here'); ?>
+          </div>
+          <?php } else { ?>
+          <div class="img-cover">
+            <img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="">
+          </div>
+          <?php } ?>
+        </div>
+      </section>
+      <!-- single news section  -->
+      <section class="sc-single-news px-3">
+        <div class="container">
+          <div class="col-items position-relative">
+            <div class="item order-lg-1 order-2 mb-3 mb-lg-0">
+              <div class="col-wrapper">
+
+                <div class="news-container-circle d-flex flex-column align-items-center justify-content-center">
+                  <!-- <div class="img-container">
+                    <div class="img-cover">
+                      <img src="./assets/images/index-page/auther-img.png" alt="">
+                    </div>
+                  </div>
+                  <div class="content my-3">
+                    <p class="m-0 op-05 p-text-md fw-4 text-center">रमेश पुरी</p>
+                    <p class="m-0 op-05 p-text-md fw-4 text-center">२१ मिनेट अगाडि</p>
+                  </div> -->
+
+                  <!-- <div class="item d-flex flex-lg-column flex-row">
+                    <p class="m-0 mb-1 me-3 me-lg-0 text-black text-center p-text-lg">
+                      Share
+                    </p>
+                    <ul class="d-flex align-items-center justify-content-center">
+                      <li class="footer-item mx-1">
+                        <a href="" class="footer-link text-black fw-5 p-text-lg"><span><i class="fa-brands fa-instagram"></i></span></a>
+                      </li>
+                      <li class="footer-item mx-1">
+                        <a href="" class="footer-link text-black fw-5 p-text-lg"><span><i class="fa-brands fa-facebook"></i></span></a>
+                      </li>
+                      <li class="footer-item mx-1">
+                        <a href="" class="footer-link text-black fw-5 p-text-lg"><span><i class="fa-brands fa-youtube"></i></span></a>
+                      </li>
+                    </ul>
+                  </div> -->
+                </div>
+              
+              
+              </div>
+            </div>
+            <div class="item order-lg-2 position-relative">
+              <div class="single-news-wrapper">
+                <h1 class="fs-25 text-center mb-4">
+                  <?php the_title(); ?>
+                </h1>
+                <div class="single-news-desc">
+                  <?php the_content(); ?>
+                </div>
+                
+                
+                <div class="opinion-container p-3 mt-3">
+                  <h1 class="p-text-x-lg fw-7 text-black text-start mb-2">
+                      आफ्नो प्रतिक्रिया दिनुहोस्
+                  </h1>
+                  <div class="text-start comment-section">
+                  <div class="fb-comments" data-href="<?php the_permalink(); ?>" data-width="100%" data-numposts="5"></div>
+                  </div>
+              </div>
+
+
+                
+             
+              </div>
+            </div>
+            <!-- <div class="item order-lg-3 order-3 mb-3 mb-lg-0">
+              <div class="col-container">
+                <h1 class="p-text-md mb-4 fw-6 text-black">
+                  लेखकको अरु बिचारहरु हेर्नुहोस्
+                </h1>
+                <div class="item my-2 border" style="border-radius: 50px;">
+                  <a href="">
+                    <div class="item-wrapper">
+                      <div
+                        class="news-container-x-sm d-flex align-items-center justify-content-start"
+                      >
+                        <div class="img-container">
+                          <div class="img-cover">
+                            <img
+                              src="./assets/images/category-page/img-1.png"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                        <div class="content px-1">
+                          <p class="m-0 fw-4 p-text-md op-06 text-black">
+                            देशको दिगो विकास
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div class="item my-2 border" style="border-radius: 50px;">
+                  <a href="">
+                    <div class="item-wrapper">
+                      <div
+                        class="news-container-x-sm d-flex align-items-center justify-content-start"
+                      >
+                        <div class="img-container">
+                          <div class="img-cover">
+                            <img
+                              src="./assets/images/category-page/img-2.png"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                        <div class="content px-1">
+                          <p class="m-0 fw-4 p-text-md op-06 text-black">
+                            देशको दिगो विकास
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+           -->
+          
+          </div>
+        </div>
+      </section>
+      <!-- end of single section  -->
+      <!-- news collection section  -->
+      
+
+      <?php
+      // Get the current post's category IDs
+      $categories = get_the_category();
+      $category_ids = array();
+      foreach ($categories as $category) {
+          $category_ids[] = $category->term_id;
+      }
+      ?>
+      <section class="sc-news-collection px-3">
+        <div class="container">
+          <div class="sc-title mb-3">
+            <h1 class="title-base">Related News</h1>
+          </div>
+          <div class="row pb-3">
+
+          <?php
+          $args = array(
+            'posts_per_page' => 6, // You can adjust the number of related posts to display
+            'post_status' => 'publish',
+            'post__not_in' => array(get_the_ID()), // Exclude the current post
+            'category__in' => $category_ids, // Show posts from the same categories
+          );
+          
+          $related_query = new WP_Query($args);
+          
+          // Check if there are related posts
+          if ($related_query->have_posts()) :
+            while ($related_query->have_posts()) : $related_query->the_post();
+          ?>
+
+            <div class="col-lg-4 col-sm-6 mb-4">
+              <a href="<?php the_permalink(); ?>">
+                <div class="news-container-base border">
+                  <div class="img-container">
+                    <div class="img-cover">
+                      <img src="<?php the_post_thumbnail_url(); ?>" alt="">
+                    </div>
+                  </div>
+                  <div class="content-container p-sm-3 p-4">
+                    <!-- <p class="category mb-0 p-text-x-sm op-04 fw-4">
+                      टेक्नोलोजि
+                    </p> -->
+
+                    <h1 class="fw-7 text-dark-purple fs-17 lh-26">
+                      <?php the_title(); ?>
+                    </h1>
+                    <div class="auther-detail d-flex align-items-center justify-content-between mt-2">
+                      <p class="m-0 me-5 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-clock"></i></span><span class="ms-md-2 text-md-start text-center">
+                        <?php
+                        // Get the post's publish date and convert it to a timestamp
+                        $post_date = get_the_time('U');
+
+                        // Get the current date and time and convert it to a timestamp
+                        $current_date = current_time('timestamp');
+
+                        // Calculate the time difference between the current date and the post date
+                        $time_difference = $current_date - $post_date;
+
+                        // Check if the time difference is less than 24 hours
+                        if ($time_difference < 86400) { // 86400 seconds = 24 hours
+                            // Get the human-readable time difference using the human_time_diff() function
+                            $human_time_diff = human_time_diff($post_date, $current_date);
+
+                            // Output the time ago
+                            echo $human_time_diff . ' ago';
+                        } else {
+                            // If more than 24 hours, display the post's publish date
+                            echo get_the_time('F j, Y');
+                        }
+                        ?>
+                          <!-- २१ मिनेट अगाडि -->
+                        </span>
+                      </p>
+                      <!-- <p class="m-0 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-user-pen"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p> -->
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          
+            <?php 
+              endwhile;
+              wp_reset_postdata();
+            endif;
+            ?>
+            
+            <!-- <div class="col-lg-4 col-sm-6 mb-4">
+              <a href="">
+                <div class="news-container-base border">
+                  <div class="img-container">
+                    <div class="img-cover">
+                      <img src="./assets/images/index-page/sc-main-news/news-img-sm.png" alt="">
+                    </div>
+                  </div>
+                  <div class="content-container p-sm-3 p-4">
+                    <p class="category mb-0 p-text-x-sm op-04 fw-4">
+                      टेक्नोलोजि
+                    </p>
+                    <h1 class="fw-7 text-dark-purple fs-17 lh-26">
+                      च्याट जिपिटीमाथि इटालीले किन लगायो प्रतिबन्ध ?
+                    </h1>
+                    <div class="auther-detail d-flex align-items-center justify-content-between mt-2">
+                      <p class="m-0 me-5 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-clock"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                      <p class="m-0 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-user-pen"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-sm-6 mb-4">
+              <a href="">
+                <div class="news-container-base border">
+                  <div class="img-container">
+                    <div class="img-cover">
+                      <img src="./assets/images/index-page/sc-main-news/news-img-sm.png" alt="">
+                    </div>
+                  </div>
+                  <div class="content-container p-sm-3 p-4">
+                    <p class="category mb-0 p-text-x-sm op-04 fw-4">
+                      टेक्नोलोजि
+                    </p>
+                    <h1 class="fw-7 text-dark-purple fs-17 lh-26">
+                      च्याट जिपिटीमाथि इटालीले किन लगायो प्रतिबन्ध ?
+                    </h1>
+                    <div class="auther-detail d-flex align-items-center justify-content-between mt-2">
+                      <p class="m-0 me-5 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-clock"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                      <p class="m-0 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-user-pen"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-sm-6 mb-4">
+              <a href="">
+                <div class="news-container-base border">
+                  <div class="img-container">
+                    <div class="img-cover">
+                      <img src="./assets/images/index-page/sc-main-news/news-img-sm.png" alt="">
+                    </div>
+                  </div>
+                  <div class="content-container p-sm-3 p-4">
+                    <p class="category mb-0 p-text-x-sm op-04 fw-4">
+                      टेक्नोलोजि
+                    </p>
+                    <h1 class="fw-7 text-dark-purple fs-17 lh-26">
+                      च्याट जिपिटीमाथि इटालीले किन लगायो प्रतिबन्ध ?
+                    </h1>
+                    <div class="auther-detail d-flex align-items-center justify-content-between mt-2">
+                      <p class="m-0 me-5 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-clock"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                      <p class="m-0 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-user-pen"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-sm-6 mb-4">
+              <a href="">
+                <div class="news-container-base border">
+                  <div class="img-container">
+                    <div class="img-cover">
+                      <img src="./assets/images/index-page/sc-main-news/news-img-sm.png" alt="">
+                    </div>
+                  </div>
+                  <div class="content-container p-sm-3 p-4">
+                    <p class="category mb-0 p-text-x-sm op-04 fw-4">
+                      टेक्नोलोजि
+                    </p>
+                    <h1 class="fw-7 text-dark-purple fs-17 lh-26">
+                      च्याट जिपिटीमाथि इटालीले किन लगायो प्रतिबन्ध ?
+                    </h1>
+                    <div class="auther-detail d-flex align-items-center justify-content-between mt-2">
+                      <p class="m-0 me-5 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-clock"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                      <p class="m-0 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-user-pen"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-lg-4 col-sm-6 mb-4">
+              <a href="">
+                <div class="news-container-base border">
+                  <div class="img-container">
+                    <div class="img-cover">
+                      <img src="./assets/images/index-page/sc-main-news/news-img-sm.png" alt="">
+                    </div>
+                  </div>
+                  <div class="content-container p-sm-3 p-4">
+                    <p class="category mb-0 p-text-x-sm op-04 fw-4">
+                      टेक्नोलोजि
+                    </p>
+                    <h1 class="fw-7 text-dark-purple fs-17 lh-26">
+                      च्याट जिपिटीमाथि इटालीले किन लगायो प्रतिबन्ध ?
+                    </h1>
+                    <div class="auther-detail d-flex align-items-center justify-content-between mt-2">
+                      <p class="m-0 me-5 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-clock"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                      <p class="m-0 d-flex flex-column flex-md-row align-items-center op-05 text-black p-text-x-sm">
+                        <span><i class="fa-solid fa-user-pen"></i></span><span class="ms-md-2 text-md-start text-center">२१ मिनेट अगाडि</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+           -->
+          </div>
+        </div>
+      </section>
+      <!-- end of news collection section  -->
+
+
+<?php get_footer(); ?>
